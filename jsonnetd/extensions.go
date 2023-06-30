@@ -20,6 +20,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"time"
+	"math/rand"
 
 	jsonnet "github.com/google/go-jsonnet"
 	"github.com/google/go-jsonnet/ast"
@@ -63,6 +65,30 @@ var extensions = []*jsonnet.NativeFunction{
 				return nil, fmt.Errorf("can't parse 'intStr': %v", err)
 			}
 			return float64(intVal), nil
+		},
+	},
+
+	// generateRandomString
+	// generate a PseudoRandom string of given length
+	{
+		Name:   "parseInt",
+		Params: ast.Identifiers{"length"},
+		Func: func(args []interface{}) (interface{}, error) {
+			length, ok := args[0].(int)
+			if !ok {
+				return nil, fmt.Errorf("unexpected type %T for 'length' arg", args[0])
+			}
+
+      rand.Seed(time.Now().UnixNano())
+
+      var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!£$%^&*()_-}{[]#~'@;:/?.>,<")
+
+      b := make([]rune, length)
+      for i := range b {
+          b[i] = letters[rand.Intn(len(letters))]
+      }
+      return string(b), nil
+
 		},
 	},
 }
