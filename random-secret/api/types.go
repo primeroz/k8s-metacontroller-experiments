@@ -36,7 +36,7 @@ type RandomSecret struct {
 
 type RandomSecretSpec struct {
 	secretName string `json:"secretName"`
-	length     int    `json:"replicas"`
+	length     int    `json:"length"`
 }
 
 type RandomSecretStatus struct {

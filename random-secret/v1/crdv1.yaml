@@ -33,12 +33,12 @@ spec:
             type: object
           spec:
             properties:
-              replicas:
+              length:
                 type: integer
               secretName:
                 type: string
             required:
-            - replicas
+            - length
             - secretName
             type: object
           status:
