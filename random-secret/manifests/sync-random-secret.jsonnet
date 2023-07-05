@@ -4,7 +4,11 @@ function(request) {
   local secretLength = secret.spec.length,
 
   // Create and return a random secret
-  attachments: [
+  status: {
+    observedGeneration: '1',
+    ready: 'false',
+  },
+  children: [
     {
       apiVersion: 'v1',
       kind: 'Secret',
