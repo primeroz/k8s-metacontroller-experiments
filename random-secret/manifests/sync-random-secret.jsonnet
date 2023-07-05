@@ -1,6 +1,6 @@
 function(request) {
   local parent = request.parent,
-  local child = std.get(request, 'child', { metadata: {} }),
+  local child = std.get(request, 'children', { metadata: {} }),
 
   // Create and return a random secret
   status: {
