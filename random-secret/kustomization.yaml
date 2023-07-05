@@ -1,0 +1,10 @@
+resources:
+- v1/crdv1.yaml
+- manifests/randomSecretsCompositeController.yaml
+- manifests/randomSecretsControllerDeployment.yaml
+- manifests/randomSecretsControllerService.yaml
+configMapGenerator:
+- name: random-secrets-hooks
+  namespace: metacontroller
+  files:
+  - manifests/sync-random-secret.jsonnet

@@ -1,9 +1,0 @@
-resources:
-- randomSecretsCompositeController.yaml
-- randomSecretsControllerDeployment.yaml
-- randomSecretsControllerService.yaml
-configMapGenerator:
-- name: random-secrets-hooks
-  namespace: metacontroller
-  files:
-  - sync-random-secret.jsonnet
