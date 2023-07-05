@@ -1,7 +1,7 @@
 function(request) {
-  local secret = request.object,
-  local name = secret.spec.name,
-  local length = secret.spec.length,
+  local secret = request.parent,
+  local secretName = secret.spec.secretName,
+  local secretLength = secret.spec.length,
 
   // Create and return a random secret
   attachments: [
@@ -9,7 +9,7 @@ function(request) {
       apiVersion: 'v1',
       kind: 'Secret',
       metadata: {
-        name: name,
+        name: secretName,
         labels: { app: 'test' },
       },
       data: {
