@@ -12,6 +12,9 @@ local data = {
       secretName: 'secret1',
     },
   },
+  children: {
+    'Secret.v1': {},
+  },
 };
 
 
