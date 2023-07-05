@@ -12,3 +12,10 @@ run: # Run the project
 .PHONY: clean
 clean: # Clean the project
 	@./kind.sh delete
+
+.PHONY: apply_random_secrets_controllers
+apply_random_secrets_controllers:
+	@make -C random-secret apply_manifests
+
+.PHONY: apply_controllers
+apply_controllers: apply_random_secrets_controllers
