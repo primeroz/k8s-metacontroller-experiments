@@ -1,19 +1,18 @@
 function(request) {
-  local secret = request.parent,
-  local secretName = secret.spec.secretName,
-  local secretLength = secret.spec.length,
+  local parent = request.parent,
+  local child = std.get(request, 'child', { metadata: {} }),
 
   // Create and return a random secret
   status: {
-    observedGeneration: '1',
-    ready: 'false',
+    observedGeneration: std.get(child.metadata, 'resourceVersion', '0'),
+    ready: if std.objectHas(child.metadata, 'resourceVersion') then 'true' else 'false',
   },
   children: [
     {
       apiVersion: 'v1',
       kind: 'Secret',
       metadata: {
-        name: secretName,
+        name: parent.spec.secretName,
         labels: { app: 'test' },
       },
       data: {
