@@ -1,2 +1,15 @@
 resources:
 - https://github.com/metacontroller/metacontroller//manifests/production?ref=v4.10.4
+patches:
+- target:
+    group: apps
+    kind: StatefulSet
+    version: v1
+    name: metacontroller
+  patch: |-
+    - op: add
+      path: "/spec/template/spec/containers/0/args/-"
+      value: "--zap-devel"
+    - op: add
+      path: "/spec/template/spec/containers/0/args/-"
+      value: "--zap-log-level=5"
