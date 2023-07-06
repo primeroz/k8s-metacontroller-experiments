@@ -11,6 +11,9 @@ FROM primeroz/jsonnetd:$jsonnetdTag AS jsonnetd
 
 FROM debian:bookworm-slim
 COPY --from=jsonnetd /jsonnetd/jsonnetd /hooks/
+COPY --from=build /hooks /hooks/
+
 WORKDIR /hooks
+
 ENTRYPOINT ["/hooks/jsonnetd"]
 EXPOSE 8080

@@ -6,7 +6,7 @@ API_GROUPS := metacontroller/v1alpha1
 
 CODE_GENERATOR_VERSION="v0.24.3"
 
-imageTag = 0.2
+imageTag = 0.3
 jsonnetdTag = 0.6
 
 all: generate_crds
