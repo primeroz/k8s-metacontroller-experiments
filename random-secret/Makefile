@@ -1,6 +1,6 @@
 PWD := ${CURDIR}
 
-imageTag = 0.4
+imageTag = 0.6
 jsonnetdTag = 0.6
 
 all: generate_crds

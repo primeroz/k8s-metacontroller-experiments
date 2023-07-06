@@ -7,10 +7,10 @@ function(request) {
   local childrenSecret = std.get(request.children, 'Secret.v1'),
 
   // Create and return a random secret
-  resyncAfterSeconds: if std.objectHas(children.metadata, 'resourceVersion') then 30.0 else 1800.0,
+  resyncAfterSeconds: if (childrenSecret != {} && std.objectHas(childrenSecret.metadata, 'resourceVersion')) then 30.0 else 1800.0,
   status: {
-    observedGeneration: parent.metadata.resourceVersion,
-    ready: if std.objectHas(children.metadata, 'resourceVersion') then 'true' else 'false',
+    observedGeneration: std.get(parent.metadata, 'generation', 0),
+    ready: if (childrenSecret != {} && std.objectHas(childrenSecret.metadata, 'resourceVersion')) then 'true' else 'false',
   },
   children: [
     secret.new(
