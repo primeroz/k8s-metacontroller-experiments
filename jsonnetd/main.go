@@ -32,11 +32,16 @@ import (
 )
 
 func main() {
+  log.Printf("Starting Jsonnetd version: %s", "TODO Add version")
+
   // Handle Cli flags
 	enablePrintingRequests := flag.Bool("print-requests", false, "Enable printing of requests")
 
 	flag.Parse()
 
+	if *enablePrintingRequests {
+    log.Printf("Enabling printing of Requests: %s", "true")
+	}
 
 	// Read all Jsonnet files in the working dir.
 	files, err := ioutil.ReadDir(".")
@@ -55,6 +60,8 @@ func main() {
 			log.Fatalf("can't read %q: %v", filename, err)
 		}
 		hookcode := string(filedata)
+
+    log.Printf("Enabling hook: %s", hookname)
 
 		// Serve the Jsonnet file as a webhook.
 		http.HandleFunc("/"+hookname, func(w http.ResponseWriter, r *http.Request) {

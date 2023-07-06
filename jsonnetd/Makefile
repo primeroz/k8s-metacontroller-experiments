@@ -1,4 +1,4 @@
-tag = 0.5
+tag = 0.6
 
 image:
 	docker build -t primeroz/jsonnetd:$(tag) .
