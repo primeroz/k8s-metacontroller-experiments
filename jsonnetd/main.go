@@ -19,6 +19,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"flag"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -31,6 +32,12 @@ import (
 )
 
 func main() {
+  // Handle Cli flags
+	enablePrintingRequests := flag.Bool("print-requests", false, "Enable printing of requests")
+
+	flag.Parse()
+
+
 	// Read all Jsonnet files in the working dir.
 	files, err := ioutil.ReadDir(".")
 	if err != nil {
@@ -69,8 +76,12 @@ func main() {
 			}
 			vm.TLACode("request", string(body))
 			result, err := vm.EvaluateSnippet(filename, hookcode)
-			if err != nil {
+
+			if err != nil || *enablePrintingRequests {
 				log.Printf("/%s request: %s", hookname, body)
+			}
+
+			if err != nil {
 				log.Printf("/%s error: %s", hookname, err)
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
