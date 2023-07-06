@@ -1,4 +1,4 @@
-local test = import '../manifests/sync-random-secret.jsonnet';
+local test = import '../jsonnet/sync-random-secret.jsonnet';
 
 local data = {
   parent: {

@@ -1,3 +1,7 @@
+local k = import 'vendor/github.com/jsonnet-libs/k8s-libsonnet/1.26/main.libsonnet';
+
+local secret = k.core.v1.secret;
+
 function(request) {
   local parent = request.parent,
   local _children = std.get(request.children, 'Secret.v1'),
@@ -10,16 +14,22 @@ function(request) {
     ready: if std.objectHas(children.metadata, 'resourceVersion') then 'true' else 'false',
   },
   children: [
-    {
-      apiVersion: 'v1',
-      kind: 'Secret',
-      metadata: {
-        name: parent.spec.secretName,
-        labels: { app: 'test' },
-      },
-      data: {
+    secret.new(
+      parent.spec.secretName,
+      {
         value: std.base64('test'),
-      },
-    },
+      }
+    ),
+    //{
+    //  apiVersion: 'v1',
+    //  kind: 'Secret',
+    //  metadata: {
+    //    name: parent.spec.secretName,
+    //    labels: { app: 'test' },
+    //  },
+    //  data: {
+    //    value: std.base64('test'),
+    //  },
+    //},
   ],
 }
