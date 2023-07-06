@@ -3,4 +3,15 @@ resources:
 - manifests/randomSecretsCompositeController.yaml
 - manifests/randomSecretsControllerDeployment.yaml
 - manifests/randomSecretsControllerService.yaml
+patches:
+- target:
+    group: apps
+    kind: Deployment
+    version: v1
+    name: random-secrets-controller
+  patch: |-
+    - op: add
+      path: "/spec/template/spec/containers/0/args/-"
+      value: "--print-requests"
+# TODO Set image version here from Makefile
 #image
