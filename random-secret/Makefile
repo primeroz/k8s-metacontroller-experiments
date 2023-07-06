@@ -6,9 +6,8 @@ API_GROUPS := metacontroller/v1alpha1
 
 CODE_GENERATOR_VERSION="v0.24.3"
 
-# TODO pass as args
-imageTag = 0.1
-jsonnetdTag = 0.5
+imageTag = 0.2
+jsonnetdTag = 0.6
 
 all: generate_crds
 
@@ -23,7 +22,7 @@ apply_manifests:
 	@kubectl apply -k .
 
 image:
-	docker build -t primeroz/jsonnetd-random-secrets-controller:$(imageTag) .
+	docker build -t primeroz/jsonnetd-random-secrets-controller:$(imageTag) --build-arg jsonnetdTag=$(jsonnetdTag) .
 
 push: image
 	docker push primeroz/jsonnetd-random-secrets-controller:$(imageTag)
