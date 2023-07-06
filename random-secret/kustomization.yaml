@@ -4,14 +4,17 @@ resources:
 - manifests/randomSecretsControllerDeployment.yaml
 - manifests/randomSecretsControllerService.yaml
 patches:
-- target:
-    group: apps
-    kind: Deployment
-    version: v1
-    name: random-secrets-controller
-  patch: |-
+- patch: |-
     - op: add
       path: "/spec/template/spec/containers/0/args/-"
       value: "--print-requests"
-# TODO Set image version here from Makefile
-#image
+  target:
+    group: apps
+    kind: Deployment
+    name: random-secrets-controller
+    version: v1
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+images:
+- name: primeroz/jsonnetd-random-secrets-controller
+  newTag: "0.4"

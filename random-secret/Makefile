@@ -1,12 +1,6 @@
 PWD := ${CURDIR}
-ADDITIONAL_BUILD_ARGUMENTS?=""
 
-PKG		:= metacontroller
-API_GROUPS := metacontroller/v1alpha1
-
-CODE_GENERATOR_VERSION="v0.24.3"
-
-imageTag = 0.3
+imageTag = 0.4
 jsonnetdTag = 0.6
 
 all: generate_crds
@@ -26,3 +20,4 @@ image:
 
 push: image
 	docker push primeroz/jsonnetd-random-secrets-controller:$(imageTag)
+	kustomize edit set image primeroz/jsonnetd-random-secrets-controller:$(imageTag)
