@@ -16,6 +16,10 @@ spec:
     resource: secrets
     updateStrategy:
       method: InPlace
+  - apiVersion: apps.v1
+    resource: deployments
+    updateStrategy:
+      method: InPlace
   hooks:
     sync:
       webhook:

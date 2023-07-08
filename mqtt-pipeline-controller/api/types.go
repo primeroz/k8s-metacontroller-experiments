@@ -35,7 +35,7 @@ type MqttPublisher struct {
 }
 
 type MqttPublisherSpec struct {
-	topcName string `json:"topicName"`
+	topicName string `json:"topicName"`
 }
 
 type MqttPublisherStatus struct {
@@ -56,7 +56,7 @@ type MqttSubscriber struct {
 }
 
 type MqttSubscriberSpec struct {
-	topcName string `json:"topicName"`
+	topicName string `json:"topicName"`
 }
 
 type MqttSubscriberStatus struct {
