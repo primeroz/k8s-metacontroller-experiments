@@ -1,0 +1,21 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqtt-controller
+  namespace: metacontroller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mqtt-controller
+  template:
+    metadata:
+      labels:
+        app: mqtt-controller
+    spec:
+      containers:
+      - name: hooks
+        image: primeroz/jsonnetd-mqtt-controller:0.1
+        imagePullPolicy: Always
+        args: []

@@ -1,0 +1,22 @@
+---
+apiVersion: metacontroller.k8s.io/v1alpha1
+kind: CompositeController
+metadata:
+  name: mqtt-publisher-controller
+spec:
+  generateSelector: true
+  parentResource:
+    apiVersion: primeroz.xyz/v1
+    resource: mqttpublisher
+    revisionHistory:
+      fieldPaths:
+      - spec.topicName
+  childResources:
+  - apiVersion: v1
+    resource: secrets
+    updateStrategy:
+      method: InPlace
+  hooks:
+    sync:
+      webhook:
+        url: http://mqtt-controller.metacontroller/sync-mqtt-publisher

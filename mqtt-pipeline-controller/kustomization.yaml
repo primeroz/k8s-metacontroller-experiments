@@ -1,0 +1,10 @@
+resources:
+- v1/crdv1.yaml
+- manifests/mqttControllerDeployment.yaml
+- manifests/mqttControllerService.yaml
+- manifests/mqttPublisherCompositeController.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+images:
+- name: primeroz/jsonnetd-mqtt-controller
+  newTag: "0.1"

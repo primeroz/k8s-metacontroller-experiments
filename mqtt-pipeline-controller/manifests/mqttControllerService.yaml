@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mqtt-controller
+  namespace: metacontroller
+spec:
+  selector:
+    app: mqtt-controller
+  ports:
+  - port: 80
+    targetPort: 8080
