@@ -7,7 +7,10 @@ help: # Show help for each of the Makefile recipes.
 .PHONY: run
 run: # Run the project
 	@./kind.sh exists || ./kind.sh create
-	@kubectl apply -k metacontroller/
+	@source ./common ;\
+  e_header "Creating MetaController" ;\
+  kubectl apply -k metacontroller/ ;\
+  e_success "Done"
 
 .PHONY: clean
 clean: # Clean the project
