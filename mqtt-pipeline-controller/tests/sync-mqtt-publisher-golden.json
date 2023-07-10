@@ -17,8 +17,7 @@
          "apiVersion": "apps/v1",
          "kind": "Deployment",
          "metadata": {
-            "name": "mqtt-publisher-test1",
-            "namespace": "default"
+            "name": "mqtt-publisher-test1"
          },
          "spec": {
             "replicas": 1,

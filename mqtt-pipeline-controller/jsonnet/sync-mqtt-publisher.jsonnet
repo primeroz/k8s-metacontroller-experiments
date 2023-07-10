@@ -25,7 +25,6 @@ function(request) {
   //c.withCommand(['--conf', '/data/config.yaml']),
 
   local deployment = d.new('mqtt-publisher-' + parent.spec.topicName, 1, [container], { app: 'mqtt-publisher', topic: parent.spec.topicName }) +
-                     d.metadata.withNamespace('default') +
                      d.spec.template.metadata.withLabelsMixin({ app: 'mqtt-publisher', topic: parent.spec.topicName }),
   //d.metadata.withLabelsMixin($._config.EventExporter.labels) +
   //d.metadata.withLabelsMixin(configLib.utils.RenderRequiredLabels($._config.EventExporter.name, $._config.EventExporter.version)) +
