@@ -13,7 +13,7 @@ function(request, controllerConfig) {
   local secret = sec.new(
                    'mqtt-publisher-' + parent.spec.topicName,
                    {
-                     HOST: std.base64('test.mosquitto.net'),
+                     HOST: std.base64('test.mosquitto.org'),
                      PORT: std.base64('1883'),
                      TOPIC: std.base64(parent.spec.topicName),
                    }
@@ -39,7 +39,8 @@ function(request, controllerConfig) {
 
 
   // Create and return a random secret
-  resyncAfterSeconds: if (std.objectHas(childrenSecret, 'metadata') && std.objectHas(childrenSecret.metadata, 'resourceVersion')) then 30.0 else 1800.0,
+  //resyncAfterSeconds: if (std.objectHas(childrenSecret, 'metadata') && std.objectHas(childrenSecret.metadata, 'resourceVersion')) then 30.0 else 1800.0,
+  resyncAfterSeconds: 30.0,
   status: {
     observedGeneration: std.get(parent.metadata, 'generation', 0),
     ready: if (std.objectHas(childrenSecret, 'metadata') && std.objectHas(childrenSecret.metadata, 'resourceVersion')) then 'true' else 'false',

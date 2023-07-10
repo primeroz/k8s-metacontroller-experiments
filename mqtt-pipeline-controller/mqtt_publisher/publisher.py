@@ -11,10 +11,14 @@ TOPIC=os.getenv("TOPIC")
 if PORT=="None" or HOST=="None" or TOPIC=="None":
   print ("PORT, HOST or TOPIC Environment variable is not set")
   sys.exit(1)
+else:
+  print ("MQTT HOST: "+HOST)
+  print ("MQTT PORT: "+PORT)
+  print ("MQTT TOPIC: "+TOPIC)
 
 CURRENT_DIR = os.getcwd()
  
-def on_connect(mosq, obj, rc):
+def on_connect(mosq, obj, rc, properties=None):
     print("Connected to MQTT broker: rc="+str(rc))
     mqttc.publish('available/%s/online' % TOPIC, 'True', retain=True)
 
