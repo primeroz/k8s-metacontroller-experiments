@@ -31,8 +31,10 @@ import (
 	jsonnet "github.com/google/go-jsonnet"
 )
 
+var Version = "dev"
+
 func main() {
-  log.Printf("Starting Jsonnetd version: %s", "TODO Add version")
+  log.Printf("Starting Jsonnetd version: %s", Version)
 
   // Handle Cli flags
 	enablePrintingRequests := flag.Bool("print-requests", false, "Enable printing of requests")
@@ -82,6 +84,7 @@ func main() {
 				vm.NativeFunction(ext)
 			}
 			vm.TLACode("request", string(body))
+			vm.TLACode("controllerVersion", Version)
 			result, err := vm.EvaluateSnippet(filename, hookcode)
 
 			if err != nil || *enablePrintingRequests {
