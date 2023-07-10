@@ -41,13 +41,13 @@ image_mqtt_publisher:
 push_mqtt_publisher: image_mqtt_publisher
 	docker push primeroz/mqtt-publisher:$(mqttTag)
 
-image_mqtt_subscriber:
-	docker build -f Dockerfile.mqtt_subscriber -t primeroz/mqtt-subscriber:$(mqttTag) .
-push_mqtt_subscriber: image_mqtt_subscriber
-	docker push primeroz/mqtt-subscriber:$(mqttTag)
+#image_mqtt_subscriber:
+#	docker build -f Dockerfile.mqtt_subscriber -t primeroz/mqtt-subscriber:$(mqttTag) .
+#push_mqtt_subscriber: image_mqtt_subscriber
+#	docker push primeroz/mqtt-subscriber:$(mqttTag)
 
 
-push: push_controller push_mqtt_publisher push_mqtt_subscriber
+push: push_controller push_mqtt_publisher
 
 test: lint parse diff
 
