@@ -1,0 +1,27 @@
+---
+apiVersion: metacontroller.k8s.io/v1alpha1
+kind: CompositeController
+metadata:
+  name: mqtt-subscriber-controller
+spec:
+  generateSelector: true
+  parentResource:
+    apiVersion: primeroz.xyz/v1
+    resource: mqttsubscribers
+    revisionHistory:
+      fieldPaths:
+      - spec.topics
+      - spec.instanceName
+  childResources:
+  - apiVersion: v1
+    resource: configmap
+    updateStrategy:
+      method: InPlace
+  - apiVersion: apps/v1
+    resource: deployments
+    updateStrategy:
+      method: InPlace
+  hooks:
+    sync:
+      webhook:
+        url: http://mqtt-controller.metacontroller/sync-mqtt-subscriber

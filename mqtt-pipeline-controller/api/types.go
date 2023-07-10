@@ -56,7 +56,8 @@ type MqttSubscriber struct {
 }
 
 type MqttSubscriberSpec struct {
-	topicName string `json:"topicName"`
+	topics []string `json:"topics"`
+	instanceName string `json:"instanceName"`
 }
 
 type MqttSubscriberStatus struct {

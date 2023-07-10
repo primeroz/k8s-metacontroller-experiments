@@ -88,10 +88,15 @@ spec:
             type: object
           spec:
             properties:
-              topicName:
+              instanceName:
                 type: string
+              topics:
+                items:
+                  type: string
+                type: array
             required:
-            - topicName
+            - instanceName
+            - topics
             type: object
           status:
             properties:

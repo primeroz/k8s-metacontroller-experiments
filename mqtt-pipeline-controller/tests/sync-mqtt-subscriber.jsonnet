@@ -8,11 +8,13 @@ local data = {
       name: 'test1',
     },
     spec: {
-      topicName: ['test1'],
+      topics: ['test1'],
+      instanceName: 'test1',
     },
   },
   children: {
-    'Secret.v1': {},
+    'Configmap.v1': {},
+    'Deployment.apps/v1': {},
   },
 };
 

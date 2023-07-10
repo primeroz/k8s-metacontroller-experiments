@@ -12,14 +12,14 @@ function(request, controllerConfig) {
   local parent = request.parent,
 
   local conf = telegrafConf {
-                 name:: parent.spec.topicName,
+                 name:: parent.spec.instanceName,
                } +
-               telegrafConf.withMqttConsumer('tcp://test.mosquitto.org:1883', parent.spec.topicName) +
+               telegrafConf.withMqttConsumer('tcp://test.mosquitto.org:1883', parent.spec.topics) +
                telegrafConf.withOutputsStdout('cloudevents'),
 
   local t = telegraf {
     _config+:: {
-      name: 'mqtt-subscriber-' + parent.spec.topicName,
+      name: 'mqtt-subscriber-' + parent.spec.instanceName,
       telegrafConfig: conf.rendered,
     },
   },

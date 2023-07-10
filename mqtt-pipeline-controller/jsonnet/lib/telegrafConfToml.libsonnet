@@ -62,7 +62,7 @@
         mqtt_consumer+: [
           std.prune({
             servers: [host],
-            topics: std.toString(std.join(',', topics)),
+            topics: topics,
             qos: '0',
           }),
         ],
@@ -76,7 +76,7 @@
       outputs+: {
         file+: [
           {
-            files: '["stdout"]',
+            files: ['stdout'],
             data_format: format,
           },
         ],

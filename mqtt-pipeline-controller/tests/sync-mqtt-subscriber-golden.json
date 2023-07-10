@@ -1,0 +1,131 @@
+{
+   "children": [
+      {
+         "apiVersion": "v1",
+         "data": {
+            "telegraf.conf": "\n\n[agent]\n collection_jitter = \"2s\"\n flush_interval = \"10s\"\n flush_jitter = \"5s\"\n interval = \"30s\"\n metric_batch_size = 1000\n metric_buffer_limit = 25000\n\n[global_tags]\n hostname = \"$HOSTNAME\"\n nodename = \"$NODENAME\"\n\n[inputs]\n\n\n [inputs.internal]\n\n\n  [[inputs.internal.tags]]\n   job = \"telegraf/test1\"\n\n [[inputs.mqtt_consumer]]\n  qos = \"0\"\n  servers = [\n   \"tcp://test.mosquitto.org:1883\"\n  ]\n  topics = [\n   \"test1\"\n  ]\n\n[outputs]\n\n\n [[outputs.file]]\n  data_format = \"cloudevents\"\n  files = [\n   \"stdout\"\n  ]"
+         },
+         "kind": "ConfigMap",
+         "metadata": {
+            "annotations": { },
+            "labels": {
+               "app.kubernetes.io/component": "telegraf",
+               "app.kubernetes.io/name": "mqtt-subscriber-test1"
+            },
+            "name": "mqtt-subscriber-test1-config"
+         }
+      },
+      {
+         "apiVersion": "apps/v1",
+         "kind": "Deployment",
+         "metadata": {
+            "labels": {
+               "app.kubernetes.io/component": "telegraf",
+               "app.kubernetes.io/name": "mqtt-subscriber-test1"
+            },
+            "name": "mqtt-subscriber-test1"
+         },
+         "spec": {
+            "replicas": 1,
+            "selector": {
+               "matchLabels": {
+                  "app.kubernetes.io/component": "telegraf",
+                  "app.kubernetes.io/name": "mqtt-subscriber-test1",
+                  "name": "mqtt-subscriber-test1"
+               }
+            },
+            "strategy": {
+               "type": "Recreate"
+            },
+            "template": {
+               "metadata": {
+                  "labels": {
+                     "app.kubernetes.io/component": "telegraf",
+                     "app.kubernetes.io/name": "mqtt-subscriber-test1",
+                     "name": "mqtt-subscriber-test1"
+                  }
+               },
+               "spec": {
+                  "containers": [
+                     {
+                        "args": [
+                           "--config",
+                           "/etc/telegraf/telegraf.conf",
+                           "--watch-config",
+                           "inotify"
+                        ],
+                        "command": [
+                           "telegraf"
+                        ],
+                        "env": [
+                           {
+                              "name": "HOME",
+                              "value": "/tmp/"
+                           },
+                           {
+                              "name": "NODENAME",
+                              "valueFrom": {
+                                 "fieldRef": {
+                                    "fieldPath": "spec.nodeName"
+                                 }
+                              }
+                           },
+                           {
+                              "name": "HOST_IP",
+                              "valueFrom": {
+                                 "fieldRef": {
+                                    "fieldPath": "status.hostIP"
+                                 }
+                              }
+                           },
+                           {
+                              "name": "HOSTNAME",
+                              "valueFrom": {
+                                 "fieldRef": {
+                                    "fieldPath": "spec.nodeName"
+                                 }
+                              }
+                           }
+                        ],
+                        "image": "docker.io/library/telegraf:1.25.3",
+                        "name": "telegraf",
+                        "resources": {
+                           "limits": {
+                              "cpu": "100m",
+                              "memory": "100Mi"
+                           },
+                           "requests": {
+                              "cpu": "10m",
+                              "memory": "10Mi"
+                           }
+                        },
+                        "securityContext": {
+                           "runAsUser": 999
+                        },
+                        "volumeMounts": [
+                           {
+                              "mountPath": "/etc/telegraf",
+                              "name": "mqtt-subscriber-test1-config"
+                           }
+                        ]
+                     }
+                  ],
+                  "volumes": [
+                     {
+                        "configMap": {
+                           "name": "mqtt-subscriber-test1-config"
+                        },
+                        "name": "mqtt-subscriber-test1-config"
+                     }
+                  ]
+               }
+            }
+         }
+      }
+   ],
+   "resyncAfterSeconds": 30,
+   "status": {
+      "observedGeneration": 0,
+      "ready": false
+   }
+}
