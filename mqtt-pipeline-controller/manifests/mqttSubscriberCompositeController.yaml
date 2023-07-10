@@ -14,7 +14,7 @@ spec:
       - spec.instanceName
   childResources:
   - apiVersion: v1
-    resource: configmap
+    resource: configmaps
     updateStrategy:
       method: InPlace
   - apiVersion: apps/v1

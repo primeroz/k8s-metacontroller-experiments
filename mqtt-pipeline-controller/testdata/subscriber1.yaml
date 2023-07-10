@@ -1,0 +1,10 @@
+apiVersion: "primeroz.xyz/v1"
+kind: MqttSubscriber
+metadata:
+  name: test1
+  namespace: default
+spec:
+  instanceName: topic-fctest1
+  topics: 
+    - available/topic-fctest1/online
+    - fctest/topic-fctest1

@@ -29,7 +29,7 @@ function(request, controllerConfig) {
   resyncAfterSeconds: 30.0,
   status: {
     observedGeneration: std.get(parent.metadata, 'generation', 0),
-    ready: false,
+    ready: 'false',
   },
   children: [
     t.objects.configMap,
