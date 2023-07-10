@@ -1,0 +1,7 @@
+apiVersion: "primeroz.xyz/v1"
+kind: MqttPublisher
+metadata:
+  name: test1
+  namespace: default
+spec:
+  topicName: topic-fctest1

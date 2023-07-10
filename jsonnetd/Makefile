@@ -1,4 +1,4 @@
-tag = 0.8
+tag = v0.11
 
 image:
 	docker build -t primeroz/jsonnetd:$(tag) --build-arg version=$(tag) .

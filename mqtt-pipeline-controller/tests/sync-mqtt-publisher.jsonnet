@@ -16,5 +16,9 @@ local data = {
   },
 };
 
+local controllerConfig = {
+  version: 'v0.99999',
+};
 
-test(data)
+
+test(data, controllerConfig)

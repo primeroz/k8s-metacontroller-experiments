@@ -13,9 +13,9 @@ PHONY_PARSE=$(patsubst %.jsonnet,%.parse,$(ALL_JSONNET))
 
 PWD := ${CURDIR}
 
-imageTag = 0.3
-mqttTag = 0.3
-jsonnetdTag = 0.8
+imageTag = v0.13
+mqttTag = v0.5
+jsonnetdTag = v0.11
 
 all: generate_crds
 

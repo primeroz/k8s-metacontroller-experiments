@@ -8,7 +8,7 @@ PORT=os.getenv("PORT")
 HOST=os.getenv("HOST")
 TOPIC=os.getenv("TOPIC")
 
-if PORT="None" or HOST="None" or TOPIC="None":
+if PORT=="None" or HOST=="None" or TOPIC=="None":
   print ("PORT, HOST or TOPIC Environment variable is not set")
   sys.exit(1)
 
@@ -26,7 +26,7 @@ def on_message(mosq, userdata, msg):
  
 def mqttHandler():
     mqttc.will_set('available/%s/online' % TOPIC, 'False', retain=True)
-    mqttc.connect(HOST, PORT, keepalive=10)
+    mqttc.connect(HOST, int(PORT), keepalive=10)
     mqttc.subscribe('available/%s/online' % TOPIC)
     mqttc.loop_start()
 

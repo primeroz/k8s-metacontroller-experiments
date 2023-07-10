@@ -7,7 +7,7 @@ spec:
   generateSelector: true
   parentResource:
     apiVersion: primeroz.xyz/v1
-    resource: mqttpublisher
+    resource: mqttpublishers
     revisionHistory:
       fieldPaths:
       - spec.topicName
@@ -16,7 +16,7 @@ spec:
     resource: secrets
     updateStrategy:
       method: InPlace
-  - apiVersion: apps.v1
+  - apiVersion: apps/v1
     resource: deployments
     updateStrategy:
       method: InPlace

@@ -3,12 +3,16 @@
       {
          "apiVersion": "v1",
          "data": {
-            "HOST": "test.mosquitto.net",
-            "PORT": "1883",
-            "TOPIC": "test1"
+            "HOST": "dGVzdC5tb3NxdWl0dG8ubmV0",
+            "PORT": "MTg4Mw==",
+            "TOPIC": "dGVzdDE="
          },
          "kind": "Secret",
          "metadata": {
+            "labels": {
+               "app": "mqtt-publisher",
+               "controller.version": "v0.99999"
+            },
             "name": "mqtt-publisher-test1"
          },
          "type": "Opaque"
@@ -24,6 +28,7 @@
             "selector": {
                "matchLabels": {
                   "app": "mqtt-publisher",
+                  "controller.version": "v0.99999",
                   "name": "mqtt-publisher-test1",
                   "topic": "test1"
                }
@@ -32,6 +37,7 @@
                "metadata": {
                   "labels": {
                      "app": "mqtt-publisher",
+                     "controller.version": "v0.99999",
                      "name": "mqtt-publisher-test1",
                      "topic": "test1"
                   }
@@ -46,7 +52,7 @@
                               }
                            }
                         ],
-                        "image": "primeroz/mqtt-publisher:0.1",
+                        "image": "primeroz/mqtt-publisher:v0.3",
                         "name": "controller"
                      }
                   ]

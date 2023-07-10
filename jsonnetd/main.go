@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"flag"
 	"io/ioutil"
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -33,7 +34,16 @@ import (
 
 var Version = "dev"
 
+// Controller configuration passed as JSON through TLA to the function
+type controllerConfiguration struct {
+  Version string `json:"version"`
+}
+
 func main() {
+  var config controllerConfiguration
+
+	config.Version = Version
+
   log.Printf("Starting Jsonnetd version: %s", Version)
 
   // Handle Cli flags
@@ -84,11 +94,19 @@ func main() {
 				vm.NativeFunction(ext)
 			}
 			vm.TLACode("request", string(body))
-			vm.TLACode("controllerVersion", Version)
+
+			configBuffer, err := json.Marshal(config)
+			if err != nil {
+				http.Error(w, "Failed to generate Controller config json", http.StatusInternalServerError)
+				return
+			}
+			vm.TLACode("controllerConfig", string(configBuffer))
+
 			result, err := vm.EvaluateSnippet(filename, hookcode)
 
 			if err != nil || *enablePrintingRequests {
 				log.Printf("/%s request: %s", hookname, body)
+				log.Printf("/%s controllerConfig: %s", hookname, configBuffer)
 			}
 
 			if err != nil {

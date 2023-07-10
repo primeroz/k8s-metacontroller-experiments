@@ -7,4 +7,14 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
 - name: primeroz/jsonnetd-mqtt-controller
-  newTag: "0.3"
+  newTag: v0.13
+patches:
+- patch: |-
+    - op: add
+      path: "/spec/template/spec/containers/0/args/-"
+      value: "--print-requests"
+  target:
+    group: apps
+    kind: Deployment
+    name: mqtt-controller
+    version: v1
