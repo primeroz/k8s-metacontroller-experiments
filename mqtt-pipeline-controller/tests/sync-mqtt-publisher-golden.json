@@ -1,0 +1,64 @@
+{
+   "children": [
+      {
+         "apiVersion": "v1",
+         "data": {
+            "HOST": "test.mosquitto.net",
+            "PORT": "1883",
+            "TOPIC": "test1"
+         },
+         "kind": "Secret",
+         "metadata": {
+            "name": "mqtt-publisher-test1"
+         },
+         "type": "Opaque"
+      },
+      {
+         "apiVersion": "apps/v1",
+         "kind": "Deployment",
+         "metadata": {
+            "name": "mqtt-publisher-test1",
+            "namespace": "default"
+         },
+         "spec": {
+            "replicas": 1,
+            "selector": {
+               "matchLabels": {
+                  "app": "mqtt-publisher",
+                  "name": "mqtt-publisher-test1",
+                  "topic": "test1"
+               }
+            },
+            "template": {
+               "metadata": {
+                  "labels": {
+                     "app": "mqtt-publisher",
+                     "name": "mqtt-publisher-test1",
+                     "topic": "test1"
+                  }
+               },
+               "spec": {
+                  "containers": [
+                     {
+                        "envFrom": [
+                           {
+                              "secretRef": {
+                                 "name": "mqtt-publisher-test1"
+                              }
+                           }
+                        ],
+                        "image": "primeroz/mqtt-publisher:0.1",
+                        "name": "controller"
+                     }
+                  ]
+               }
+            }
+         }
+      }
+   ],
+   "resyncAfterSeconds": 1800,
+   "status": {
+      "observedGeneration": 0,
+      "ready": "false"
+   }
+}
