@@ -13,7 +13,7 @@ PHONY_PARSE=$(patsubst %.jsonnet,%.parse,$(ALL_JSONNET))
 
 PWD := ${CURDIR}
 
-imageTag = v0.19
+imageTag = v0.22
 mqttTag = v0.9
 jsonnetdTag = v0.11
 

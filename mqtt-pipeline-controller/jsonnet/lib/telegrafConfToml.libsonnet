@@ -63,7 +63,7 @@
           std.prune({
             servers: [host],
             topics: topics,
-            qos: '0',
+            qos: 0,
           }),
         ],
       },
