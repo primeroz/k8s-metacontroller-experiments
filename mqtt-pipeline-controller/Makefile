@@ -36,7 +36,7 @@ push_controller: image_controller
 	kustomize edit set image primeroz/jsonnetd-mqtt-controller:$(imageTag)
 
 
-push: push_controller push_mqtt_publisher
+push: push_controller
 
 test: lint parse diff
 
