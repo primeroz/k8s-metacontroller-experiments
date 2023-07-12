@@ -1,6 +1,7 @@
 // Imports
 local telegraf = import './lib/telegraf.libsonnet';
 local telegrafConf = import './lib/telegrafConfToml.libsonnet';
+local kubecfg = import 'lib/kubecfg.libsonnet';
 local k = import 'vendor/github.com/jsonnet-libs/k8s-libsonnet/1.26/main.libsonnet';
 
 // k8s objects
@@ -30,12 +31,13 @@ local process = function(request) {
                  name:: parent.spec.instanceName,
                } +
                telegrafConf.withMockInput() +
-               telegrafConf.withOutputsStdout('json'),
+               telegrafConf.withMqttPublisher('tcp://$HOST:$PORT', '$TOPIC'),
 
   local t = telegraf {
     _config+:: {
       name: 'mqtt-publisher-' + parent.spec.instanceName,
       telegrafConfig: conf.rendered,
+      secretEnvFrom: secret.metadata.name,
     },
   },
 

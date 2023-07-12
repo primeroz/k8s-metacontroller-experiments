@@ -9,7 +9,7 @@ local k = import '../vendor/github.com/jsonnet-libs/k8s-libsonnet/1.26/main.libs
   _config::
     {
       name:: error 'name is required',
-      image:: 'docker.io/library/telegraf:1.25.3',
+      image:: 'docker.io/library/telegraf:1.27.2',
       hotReload:: true,
       secretEnvFrom:: null,
       configMapEnvFrom:: null,

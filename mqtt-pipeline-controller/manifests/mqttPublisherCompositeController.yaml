@@ -13,6 +13,10 @@ spec:
       - spec.topicName
   childResources:
   - apiVersion: v1
+    resource: configmaps
+    updateStrategy:
+      method: InPlace
+  - apiVersion: v1
     resource: secrets
     updateStrategy:
       method: InPlace

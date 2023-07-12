@@ -14,7 +14,7 @@ PHONY_PARSE=$(patsubst %.jsonnet,%.parse,$(ALL_JSONNET))
 
 PWD := ${CURDIR}
 
-imageTag = v0.23
+imageTag = v0.32
 
 all: generate_crds
 

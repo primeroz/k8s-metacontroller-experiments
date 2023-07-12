@@ -57,20 +57,16 @@
               location: 'mock_house',
               device_id: 'dht_001',
             },
-            field: [
+            random: [
               {
                 name: 'temperature',
-                type: 'float',
-                min: 0,
-                max: 50,
-                distribution: 'sine',
+                min: 0.1,
+                max: 50.99,
               },
               {
                 name: 'humidity',
-                type: 'float',
                 min: 0.1,
                 max: 0.99,
-                distribution: 'random',
               },
             ],
           },
@@ -95,6 +91,24 @@
             servers: [host],
             topics: topics,
             qos: 0,
+          }),
+        ],
+      },
+    },
+  },
+
+  withMqttPublisher(host, topic):: {
+
+    local this = self,
+
+    conf+:: {
+      outputs+: {
+        mqtt+: [
+          std.prune({
+            servers: [host],
+            topic: topic,
+            qos: 0,
+            keep_alive: 60,
           }),
         ],
       },

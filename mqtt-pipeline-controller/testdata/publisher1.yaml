@@ -4,4 +4,7 @@ metadata:
   name: test1
   namespace: default
 spec:
-  topicName: topic-fctest1
+  instanceName: fctest1
+  topicName: mock-fctest1
+  mqttHost: test.mosquitto.org
+  mqttPort: "1883"

@@ -35,7 +35,10 @@ type MqttPublisher struct {
 }
 
 type MqttPublisherSpec struct {
+	instanceName string `json:"instanceName"`
 	topicName string `json:"topicName"`
+	mqttHost string `json:"mqttHost"`
+	mqttPort string `json:"mqttPort"`
 }
 
 type MqttPublisherStatus struct {
