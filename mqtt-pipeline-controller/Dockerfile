@@ -1,19 +1,17 @@
-ARG jsonnetdTag
-
 FROM golang:1.20 AS build
 RUN go install -a github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@v0.5.1
+RUN go install -a github.com/kubecfg/kubecfg@v0.30.0
 
 COPY jsonnet/ /hooks
 WORKDIR /hooks
 RUN jb install
 
-FROM primeroz/jsonnetd:$jsonnetdTag AS jsonnetd
-
 FROM debian:bookworm-slim
-COPY --from=jsonnetd /jsonnetd/jsonnetd /hooks/
+COPY --from=build /go/bin/kubecfg /kubecfg
 COPY --from=build /hooks /hooks/
 
 WORKDIR /hooks
 
-ENTRYPOINT ["/hooks/jsonnetd"]
+ENTRYPOINT ["/kubecfg"]
+CMD ["--alpha", "httpd", "sync-mqtt-subscriber.jsonnet", "sync-mqtt-publisher.jsonnet"]
 EXPOSE 8080

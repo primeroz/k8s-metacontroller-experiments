@@ -1,6 +1,4 @@
-local test = import '../jsonnet/sync-mqtt-publisher.jsonnet';
-
-local data = {
+{
   parent: {
     apiVersion: 'primeroz.xyz/v1',
     kind: 'MqttPublisher',
@@ -8,17 +6,13 @@ local data = {
       name: 'test1',
     },
     spec: {
+      instanceName: 'test1',
       topicName: 'test1',
+      mqttHost: 'test.mosquitto.org',
+      mqttPort: '1883',
     },
   },
   children: {
     'Secret.v1': {},
   },
-};
-
-local controllerConfig = {
-  version: 'v0.99999',
-};
-
-
-test(data, controllerConfig)
+}

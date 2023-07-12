@@ -7,15 +7,14 @@ CODE_JSONNET=$(wildcard ./jsonnet/*.jsonnet)
 ALL_JSONNET=$(TEST_JSONNET) $(CODE_JSONNET)
 
 PHONY_GOLDEN=$(patsubst %.jsonnet,%-golden.json,$(TEST_JSONNET))
+PHONY_PRINT_GOLDEN=$(patsubst %.jsonnet,%-print.yaml,$(TEST_JSONNET))
 PHONY_DIFF=$(patsubst %.jsonnet,%.diff,$(TEST_JSONNET))
 PHONY_PARSE=$(patsubst %.jsonnet,%.parse,$(ALL_JSONNET))
 
 
 PWD := ${CURDIR}
 
-imageTag = v0.22
-mqttTag = v0.9
-jsonnetdTag = v0.11
+imageTag = v0.23
 
 all: generate_crds
 
@@ -30,28 +29,18 @@ apply_manifests:
 	@kubectl apply -k .
 
 image_controller:
-	docker build -t primeroz/jsonnetd-mqtt-controller:$(imageTag) --build-arg jsonnetdTag=$(jsonnetdTag) .
+	docker build -t primeroz/jsonnetd-mqtt-controller:$(imageTag) .
 
 push_controller: image_controller
 	docker push primeroz/jsonnetd-mqtt-controller:$(imageTag)
 	kustomize edit set image primeroz/jsonnetd-mqtt-controller:$(imageTag)
-
-image_mqtt_publisher:
-	docker build -f Dockerfile.mqtt_publisher -t primeroz/mqtt-publisher:$(mqttTag) .
-push_mqtt_publisher: image_mqtt_publisher
-	docker push primeroz/mqtt-publisher:$(mqttTag)
-
-#image_mqtt_subscriber:
-#	docker build -f Dockerfile.mqtt_subscriber -t primeroz/mqtt-subscriber:$(mqttTag) .
-#push_mqtt_subscriber: image_mqtt_subscriber
-#	docker push primeroz/mqtt-subscriber:$(mqttTag)
 
 
 push: push_controller push_mqtt_publisher
 
 test: lint parse diff
 
-.PHONY: unittests lint diff %.parse %.diff %-golden.json diff-help fix-lint gen-golden regen-golden delete-golden
+.PHONY: unittests lint diff %.parse %.diff %-golden.json %-print.yaml diff-help fix-lint print-golden gen-golden regen-golden delete-golden
 
 lint:
 	@set -e; errs=0; \
@@ -77,7 +66,11 @@ diff: diff-help $(PHONY_DIFF)
 	jsonnet $(<) > /dev/null
 
 %-golden.json: %.jsonnet
-	jsonnet $(<) > $(@)
+	kubecfg --alpha -o json eval jsonnet/$(notdir $(<)) --tla-code-file request=tests/$(notdir $(<)) > $(@)
+
+%-print.yaml: %.jsonnet
+	@printf "\n#######################\n\n"
+	kubecfg --alpha -o yaml eval jsonnet/$(notdir $(<)) --tla-code-file request=tests/$(notdir $(<))
 
 diff-help:
 	@echo "NOTE: if the 'diff' target fails, review output and run:"
@@ -91,6 +84,8 @@ fix-lint:
 	  echo $$JSONNETFMTCMD -i $(JSONNET_FMT) -- $$f; \
 	  jsonnetfmt -i $(JSONNET_FMT) -- $$f; \
 	done
+
+print-golden: $(PHONY_PRINT_GOLDEN)
 
 gen-golden: $(PHONY_GOLDEN)
 

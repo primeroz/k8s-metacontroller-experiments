@@ -47,8 +47,39 @@
     },
   },
 
-  withMqttConsumer(host,
-                   topics):: {
+  withMockInput():: {
+    conf+:: {
+      inputs+: {
+        mock+: [
+          {
+            alias: 'indoor_thermostat',
+            tags: {
+              location: 'mock_house',
+              device_id: 'dht_001',
+            },
+            field: [
+              {
+                name: 'temperature',
+                type: 'float',
+                min: 0,
+                max: 50,
+                distribution: 'sine',
+              },
+              {
+                name: 'humidity',
+                type: 'float',
+                min: 0.1,
+                max: 0.99,
+                distribution: 'random',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
+
+  withMqttConsumer(host, topics):: {
 
     assert std.isArray(topics) : 'topics must be an array',
     assert std.length(topics) > 0 : 'topics must be an array > 0',

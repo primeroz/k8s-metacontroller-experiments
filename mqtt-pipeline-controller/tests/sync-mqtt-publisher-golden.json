@@ -3,7 +3,7 @@
       {
          "apiVersion": "v1",
          "data": {
-            "HOST": "dGVzdC5tb3NxdWl0dG8ubmV0",
+            "HOST": "dGVzdC5tb3NxdWl0dG8ub3Jn",
             "PORT": "MTg4Mw==",
             "TOPIC": "dGVzdDE="
          },
@@ -11,49 +11,128 @@
          "metadata": {
             "labels": {
                "app": "mqtt-publisher",
-               "controller.version": "v0.99999"
+               "instance": "test1"
             },
             "name": "mqtt-publisher-test1"
          },
          "type": "Opaque"
       },
       {
+         "apiVersion": "v1",
+         "data": {
+            "telegraf.conf": "\n\n[agent]\n collection_jitter = \"2s\"\n flush_interval = \"10s\"\n flush_jitter = \"5s\"\n interval = \"30s\"\n metric_batch_size = 1000\n metric_buffer_limit = 25000\n\n[global_tags]\n hostname = \"$HOSTNAME\"\n nodename = \"$NODENAME\"\n\n[inputs]\n\n\n [inputs.internal]\n\n\n  [[inputs.internal.tags]]\n   job = \"telegraf/test1\"\n\n [[inputs.mock]]\n  alias = \"indoor_thermostat\"\n\n  [[inputs.mock.field]]\n   distribution = \"sine\"\n   max = 50\n   min = 0\n   name = \"temperature\"\n   type = \"float\"\n\n  [[inputs.mock.field]]\n   distribution = \"random\"\n   max = 0.98999999999999999\n   min = 0.10000000000000001\n   name = \"humidity\"\n   type = \"float\"\n\n  [inputs.mock.tags]\n   device_id = \"dht_001\"\n   location = \"mock_house\"\n\n[outputs]\n\n\n [[outputs.file]]\n  data_format = \"json\"\n  files = [\n   \"stdout\"\n  ]"
+         },
+         "kind": "ConfigMap",
+         "metadata": {
+            "annotations": { },
+            "labels": {
+               "app.kubernetes.io/component": "telegraf",
+               "app.kubernetes.io/name": "mqtt-publisher-test1"
+            },
+            "name": "mqtt-publisher-test1-config"
+         }
+      },
+      {
          "apiVersion": "apps/v1",
          "kind": "Deployment",
          "metadata": {
+            "labels": {
+               "app.kubernetes.io/component": "telegraf",
+               "app.kubernetes.io/name": "mqtt-publisher-test1"
+            },
             "name": "mqtt-publisher-test1"
          },
          "spec": {
             "replicas": 1,
             "selector": {
                "matchLabels": {
-                  "app": "mqtt-publisher",
-                  "controller.version": "v0.99999",
-                  "name": "mqtt-publisher-test1",
-                  "topic": "test1"
+                  "app.kubernetes.io/component": "telegraf",
+                  "app.kubernetes.io/name": "mqtt-publisher-test1",
+                  "name": "mqtt-publisher-test1"
                }
+            },
+            "strategy": {
+               "type": "Recreate"
             },
             "template": {
                "metadata": {
                   "labels": {
-                     "app": "mqtt-publisher",
-                     "controller.version": "v0.99999",
-                     "name": "mqtt-publisher-test1",
-                     "topic": "test1"
+                     "app.kubernetes.io/component": "telegraf",
+                     "app.kubernetes.io/name": "mqtt-publisher-test1",
+                     "name": "mqtt-publisher-test1"
                   }
                },
                "spec": {
                   "containers": [
                      {
-                        "envFrom": [
+                        "args": [
+                           "--config",
+                           "/etc/telegraf/telegraf.conf",
+                           "--watch-config",
+                           "inotify"
+                        ],
+                        "command": [
+                           "telegraf"
+                        ],
+                        "env": [
                            {
-                              "secretRef": {
-                                 "name": "mqtt-publisher-test1"
+                              "name": "HOME",
+                              "value": "/tmp/"
+                           },
+                           {
+                              "name": "NODENAME",
+                              "valueFrom": {
+                                 "fieldRef": {
+                                    "fieldPath": "spec.nodeName"
+                                 }
+                              }
+                           },
+                           {
+                              "name": "HOST_IP",
+                              "valueFrom": {
+                                 "fieldRef": {
+                                    "fieldPath": "status.hostIP"
+                                 }
+                              }
+                           },
+                           {
+                              "name": "HOSTNAME",
+                              "valueFrom": {
+                                 "fieldRef": {
+                                    "fieldPath": "spec.nodeName"
+                                 }
                               }
                            }
                         ],
-                        "image": "primeroz/mqtt-publisher:v0.3",
-                        "name": "controller"
+                        "image": "docker.io/library/telegraf:1.25.3",
+                        "name": "telegraf",
+                        "resources": {
+                           "limits": {
+                              "cpu": "100m",
+                              "memory": "100Mi"
+                           },
+                           "requests": {
+                              "cpu": "10m",
+                              "memory": "10Mi"
+                           }
+                        },
+                        "securityContext": {
+                           "runAsUser": 999
+                        },
+                        "volumeMounts": [
+                           {
+                              "mountPath": "/etc/telegraf",
+                              "name": "mqtt-publisher-test1-config"
+                           }
+                        ]
+                     }
+                  ],
+                  "volumes": [
+                     {
+                        "configMap": {
+                           "name": "mqtt-publisher-test1-config"
+                        },
+                        "name": "mqtt-publisher-test1-config"
                      }
                   ]
                }
@@ -61,9 +140,10 @@
          }
       }
    ],
-   "resyncAfterSeconds": 1800,
+   "resyncAfterSeconds": 30,
    "status": {
       "observedGeneration": 0,
       "ready": "false"
    }
 }
+

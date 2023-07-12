@@ -8,7 +8,7 @@ local c = k.core.v1.container;
 local d = k.apps.v1.deployment;
 local envFrom = k.core.v1.envFromSource;
 
-function(request, controllerConfig) {
+function(request) {
   local parent = request.parent,
 
   local conf = telegrafConf {
