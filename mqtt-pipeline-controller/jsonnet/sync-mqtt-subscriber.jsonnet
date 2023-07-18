@@ -4,23 +4,37 @@ local config = import 'config.libsonnet';
 local k = import 'vendor/github.com/jsonnet-libs/k8s-libsonnet/1.26/main.libsonnet';
 
 local cm = k.core.v1.configMap;
+local sec = k.core.v1.secret;
 local c = k.core.v1.container;
 local d = k.apps.v1.deployment;
 local envFrom = k.core.v1.envFromSource;
 
-function(request) {
+local process = function(request) {
   local parent = request.parent,
+
+  local secret = sec.new(
+                   'mqtt-subscriber-' + parent.spec.instanceName,
+                   {
+                     HOST: std.base64(parent.spec.mqttHost),
+                     PORT: std.base64(parent.spec.mqttPort),
+                   }
+                 ) +
+                 sec.metadata.withLabelsMixin({
+                   app: 'mqtt-subscriber',
+                   instance: parent.spec.instanceName,
+                 }),
 
   local conf = telegrafConf {
                  name:: parent.spec.instanceName,
                } +
-               telegrafConf.withMqttConsumer('tcp://test.mosquitto.org:1883', parent.spec.topics) +
-               telegrafConf.withOutputsStdout('influx'),
+               telegrafConf.withMqttConsumer('tcp://$HOST:$PORT', parent.spec.topics) +
+               telegrafConf.withOutputsStdout('json'),
 
   local t = telegraf {
     _config+:: {
       name: 'mqtt-subscriber-' + parent.spec.instanceName,
       telegrafConfig: conf.rendered,
+      secretEnvFrom: secret.metadata.name,
     },
   },
 
@@ -32,7 +46,13 @@ function(request) {
     ready: 'false',
   },
   children: [
+    secret,
     t.objects.configMap,
     t.objects.deployment,
   ],
-}
+};
+
+//Top Level Function
+function(request)
+  local response = process(request);
+  std.trace('request: ' + std.manifestJsonEx(request, '  ') + '\n\nresponse: ' + std.manifestJsonEx(response, '  '), response)

@@ -5,12 +5,12 @@
   name:: error 'name for this tag instance must be specified',
 
   // Agent Settings
-  interval:: '30s',
-  flush_interval:: '10s',
+  interval:: '10s',
+  flush_interval:: '5s',
   flush_jitter:: '5s',
   collection_jitter:: '2s',
   metric_batch_size:: 1000,
-  metric_buffer_limit:: 25000,
+  metric_buffer_limit:: 10000,
 
   assert std.isNumber($.metric_batch_size) : 'metric_batch_size must be an int',
   assert std.isNumber($.metric_buffer_limit) : 'metric_batch_size must be an int',
@@ -47,26 +47,28 @@
     },
   },
 
-  withMockInput():: {
+  withMockIotInput(metricName):: {
     conf+:: {
       inputs+: {
         mock+: [
           {
-            alias: 'indoor_thermostat',
+            alias: 'mock_' + metricName,
+            metric_name: metricName,
             tags: {
               location: 'mock_house',
               device_id: 'dht_001',
+              iotName: metricName,
             },
-            random: [
+            stock: [
               {
                 name: 'temperature',
-                min: 0.1,
-                max: 50.99,
+                price: 26.01,
+                volatility: 0.1,
               },
               {
                 name: 'humidity',
-                min: 0.1,
-                max: 0.99,
+                price: 65.01,
+                volatility: 0.1,
               },
             ],
           },
@@ -91,6 +93,7 @@
             servers: [host],
             topics: topics,
             qos: 0,
+            data_format: 'json',
           }),
         ],
       },
@@ -109,6 +112,7 @@
             topic: topic,
             qos: 0,
             keep_alive: 60,
+            data_format: 'json',
           }),
         ],
       },

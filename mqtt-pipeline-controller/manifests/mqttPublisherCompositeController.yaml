@@ -11,6 +11,9 @@ spec:
     revisionHistory:
       fieldPaths:
       - spec.topicName
+      - spec.instanceName
+      - spec.mqttHost
+      - spec.mqttPort
   childResources:
   - apiVersion: v1
     resource: configmaps

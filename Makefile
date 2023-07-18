@@ -16,13 +16,9 @@ run: # Run the project
 clean: # Clean the project
 	@./kind.sh delete
 
-.PHONY: apply_random_secrets_controllers
-apply_random_secrets_controllers:
-	@make -C random-secret-controller apply_manifests
-
 .PHONY: apply_mqtt_pipeline_controller
 apply_mqtt_pipeline_controller:
 	@make -C mqtt-pipeline-controller apply_manifests
 
 .PHONY: apply_controllers
-apply_controllers: apply_random_secrets_controllers apply_mqtt_pipeline_controller
+apply_controllers: apply_mqtt_pipeline_controller

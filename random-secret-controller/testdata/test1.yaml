@@ -1,8 +1,0 @@
-apiVersion: "primeroz.xyz/v1"
-kind: RandomSecret
-metadata:
-  name: test1
-  namespace: default
-spec:
-  secretName: secret1
-  length: 10

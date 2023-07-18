@@ -30,8 +30,10 @@ local process = function(request) {
   local conf = telegrafConf {
                  name:: parent.spec.instanceName,
                } +
-               telegrafConf.withMockInput() +
-               telegrafConf.withMqttPublisher('tcp://$HOST:$PORT', '$TOPIC'),
+               telegrafConf.withMockIotInput('iot1') +
+               telegrafConf.withMockIotInput('iot2') +
+               telegrafConf.withMockIotInput('iot3') +
+               telegrafConf.withMqttPublisher('tcp://$HOST:$PORT', '$TOPIC/{{ .Tag "iotName" }}/{{ .PluginName }}'),
 
   local t = telegraf {
     _config+:: {

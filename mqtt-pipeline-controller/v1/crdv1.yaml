@@ -99,12 +99,18 @@ spec:
             properties:
               instanceName:
                 type: string
+              mqttHost:
+                type: string
+              mqttPort:
+                type: string
               topics:
                 items:
                   type: string
                 type: array
             required:
             - instanceName
+            - mqttHost
+            - mqttPort
             - topics
             type: object
           status:

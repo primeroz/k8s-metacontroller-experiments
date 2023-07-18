@@ -3,7 +3,23 @@
       {
          "apiVersion": "v1",
          "data": {
-            "telegraf.conf": "\n\n[agent]\n collection_jitter = \"2s\"\n flush_interval = \"10s\"\n flush_jitter = \"5s\"\n interval = \"30s\"\n metric_batch_size = 1000\n metric_buffer_limit = 25000\n\n[global_tags]\n hostname = \"$HOSTNAME\"\n nodename = \"$NODENAME\"\n\n[inputs]\n\n\n [inputs.internal]\n\n\n  [[inputs.internal.tags]]\n   job = \"telegraf/test1\"\n\n [[inputs.mqtt_consumer]]\n  qos = 0\n  servers = [\n   \"tcp://test.mosquitto.org:1883\"\n  ]\n  topics = [\n   \"test1\"\n  ]\n\n[outputs]\n\n\n [[outputs.file]]\n  data_format = \"influx\"\n  files = [\n   \"stdout\"\n  ]"
+            "HOST": "dGVzdC5tb3NxdWl0dG8ub3Jn",
+            "PORT": "MTg4Mw=="
+         },
+         "kind": "Secret",
+         "metadata": {
+            "labels": {
+               "app": "mqtt-subscriber",
+               "instance": "test1"
+            },
+            "name": "mqtt-subscriber-test1"
+         },
+         "type": "Opaque"
+      },
+      {
+         "apiVersion": "v1",
+         "data": {
+            "telegraf.conf": "\n\n[agent]\n collection_jitter = \"2s\"\n flush_interval = \"5s\"\n flush_jitter = \"5s\"\n interval = \"10s\"\n metric_batch_size = 1000\n metric_buffer_limit = 10000\n\n[global_tags]\n hostname = \"$HOSTNAME\"\n nodename = \"$NODENAME\"\n\n[inputs]\n\n\n [inputs.internal]\n\n\n  [[inputs.internal.tags]]\n   job = \"telegraf/test1\"\n\n [[inputs.mqtt_consumer]]\n  data_format = \"json\"\n  qos = 0\n  servers = [\n   \"tcp://$HOST:$PORT\"\n  ]\n  topics = [\n   \"test1/#\"\n  ]\n\n[outputs]\n\n\n [[outputs.file]]\n  data_format = \"json\"\n  files = [\n   \"stdout\"\n  ]"
          },
          "kind": "ConfigMap",
          "metadata": {
@@ -87,7 +103,14 @@
                               }
                            }
                         ],
-                        "image": "docker.io/library/telegraf:1.25.3",
+                        "envFrom": [
+                           {
+                              "secretRef": {
+                                 "name": "mqtt-subscriber-test1"
+                              }
+                           }
+                        ],
+                        "image": "docker.io/library/telegraf:1.27.2",
                         "name": "telegraf",
                         "resources": {
                            "limits": {

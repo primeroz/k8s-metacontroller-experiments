@@ -12,9 +12,15 @@ spec:
       fieldPaths:
       - spec.topics
       - spec.instanceName
+      - spec.mqttHost
+      - spec.mqttPort
   childResources:
   - apiVersion: v1
     resource: configmaps
+    updateStrategy:
+      method: InPlace
+  - apiVersion: v1
+    resource: secrets
     updateStrategy:
       method: InPlace
   - apiVersion: apps/v1
