@@ -13,3 +13,15 @@ patches:
     - op: add
       path: "/spec/template/spec/containers/0/args/-"
       value: "--zap-log-level=5"
+    - op: add
+      path: "/spec/template/spec/containers/0/args/-"
+      value: "--metrics-address=:9999"
+    - op: add
+      path: "/spec/template/spec/containers/0/args/-"
+      value: "--discovery-interval=10s"
+    - op: add
+      path: "/spec/template/spec/containers/0/args/-"
+      value: "--cache-flush-interval=30m"
+    - op: add
+      path: "/spec/template/spec/containers/0/args/-"
+      value: "--leader-election=true"
