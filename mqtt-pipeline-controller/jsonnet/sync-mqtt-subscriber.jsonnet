@@ -55,4 +55,5 @@ local process = function(request) {
 //Top Level Function
 function(request)
   local response = process(request);
-  std.trace('request: ' + std.manifestJsonEx(request, '  ') + '\n\nresponse: ' + std.manifestJsonEx(response, '  '), response)
+  //std.trace('request: ' + std.manifestJsonEx(request, '  ') + '\n\nresponse: ' + std.manifestJsonEx(response, '  '), response)
+  response

@@ -1,6 +1,6 @@
 FROM golang:1.20 AS build
 RUN go install -a github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@v0.5.1
-RUN go install -a github.com/kubecfg/kubecfg@v0.30.0
+RUN go install -a github.com/kubecfg/kubecfg@v0.31.2
 
 COPY jsonnet/ /hooks
 WORKDIR /hooks
