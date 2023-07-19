@@ -10,10 +10,7 @@ spec:
     resource: mqttsubscribers
     revisionHistory:
       fieldPaths:
-      - spec.topics
-      - spec.instanceName
-      - spec.mqttHost
-      - spec.mqttPort
+      - spec
   childResources:
   - apiVersion: v1
     resource: configmaps

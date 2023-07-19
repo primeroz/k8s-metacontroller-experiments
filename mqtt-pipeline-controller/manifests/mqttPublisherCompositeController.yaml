@@ -10,10 +10,7 @@ spec:
     resource: mqttpublishers
     revisionHistory:
       fieldPaths:
-      - spec.topicName
-      - spec.instanceName
-      - spec.mqttHost
-      - spec.mqttPort
+      - spec
   childResources:
   - apiVersion: v1
     resource: configmaps
