@@ -1,11 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 resources:
 - v1/crdv1.yaml
 - manifests/mqttControllerDeployment.yaml
 - manifests/mqttControllerService.yaml
 - manifests/mqttPublisherCompositeController.yaml
 - manifests/mqttSubscriberCompositeController.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
 images:
 - name: primeroz/jsonnetd-mqtt-controller
-  newTag: v0.40
+  newTag: v0.51
+patches:
+- patch: "- op: replace\n  path: \"/spec/template/spec/containers/0/args\"\n  value:
+    \n    - \"--alpha\"\n    - \"--ext-str\"\n    - \"TRACE=$(TRACE)\"\n    - \"httpd\"\n
+    \   - \"sync-mqtt-subscriber.jsonnet\"\n    - \"sync-mqtt-publisher.jsonnet\"\n-
+    op: add\n  path: \"/spec/template/spec/containers/0/env/-\"\n  value:\n    name:
+    \"TRACE\"\n    value: \"true\""
+  target:
+    group: apps
+    kind: Deployment
+    name: mqtt-controller
+    version: v1

@@ -19,3 +19,4 @@ spec:
         image: primeroz/jsonnetd-mqtt-controller:0.1
         imagePullPolicy: Always
         args: []
+        env: []

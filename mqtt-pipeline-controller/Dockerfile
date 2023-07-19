@@ -10,6 +10,8 @@ FROM debian:bookworm-slim
 COPY --from=build /go/bin/kubecfg /kubecfg
 COPY --from=build /hooks /hooks/
 
+ENV TRACE="false"
+
 WORKDIR /hooks
 
 ENTRYPOINT ["/kubecfg"]

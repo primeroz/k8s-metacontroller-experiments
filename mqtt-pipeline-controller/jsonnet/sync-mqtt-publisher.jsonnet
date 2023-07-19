@@ -49,7 +49,7 @@ local process = function(request) {
   else
     {},
 
-  local isGenerationReady = if (std.length(deploymentStatus) > 0 && deploymentStatus.updatedReplicas == deploymentStatus.replicas) then
+  local isGenerationReady = if (std.length(deploymentStatus) > 0 && std.objectHas(deploymentStatus, 'updatedReplicas') && deploymentStatus.updatedReplicas == deploymentStatus.replicas) then
     true
   else
     false,
@@ -69,6 +69,10 @@ local process = function(request) {
 //Top Level Function
 function(request)
   local response = process(request);
-  //TODO Can i make the tracing conditional ?
-  std.trace('request: ' + std.manifestJsonEx(request, '  ') + '\n\nresponse: ' + std.manifestJsonEx(response, '  '), response)
-//response
+  // pass with --ext-str TRACE=true|false
+  local trace = std.extVar('TRACE');
+
+  if (trace == 'true' || trace == 'TRUE') then
+    std.trace('request: ' + std.manifestJsonEx(request, '  ') + '\n\nresponse: ' + std.manifestJsonEx(response, '  '), response)
+  else
+    response
