@@ -13,6 +13,7 @@ local envFrom = k.core.v1.envFromSource;
 //Code
 local process = function(request) {
   local parent = request.parent,
+  local children = request.children,
 
   local secret = sec.new(
                    'mqtt-publisher-' + parent.spec.instanceName,
@@ -43,11 +44,20 @@ local process = function(request) {
     },
   },
 
+  local deploymentStatus = if std.objectHas(children['Deployment.apps/v1'], 'mqtt-publisher-' + parent.spec.instanceName) then
+    children['Deployment.apps/v1']['mqtt-publisher-' + parent.spec.instanceName].status
+  else
+    {},
 
-  resyncAfterSeconds: 30.0,
+  local isGenerationReady = if (std.length(deploymentStatus) > 0 && deploymentStatus.updatedReplicas == deploymentStatus.replicas) then
+    true
+  else
+    false,
+
+  resyncAfterSeconds: if (std.objectHas(parent, 'status') && std.objectHas(parent.status, 'ready') && parent.status.ready == 'true') then 300.0 else 30.0,
   status: {
-    observedGeneration: std.get(parent.metadata, 'generation', 0),
-    ready: 'false',
+    observedGeneration: if isGenerationReady then std.get(parent.metadata, 'generation', 0) else (if std.objectHas(parent, 'status') then std.get(parent.status, 'observedGeneration', 0) else 0),
+    ready: std.toString(isGenerationReady),
   },
   children: [
     secret,
@@ -60,5 +70,5 @@ local process = function(request) {
 function(request)
   local response = process(request);
   //TODO Can i make the tracing conditional ?
-  //std.trace('request: ' + std.manifestJsonEx(request, '  ') + '\n\nresponse: ' + std.manifestJsonEx(response, '  '), response)
-  response
+  std.trace('request: ' + std.manifestJsonEx(request, '  ') + '\n\nresponse: ' + std.manifestJsonEx(response, '  '), response)
+//response

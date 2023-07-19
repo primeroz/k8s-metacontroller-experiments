@@ -14,5 +14,7 @@
   },
   children: {
     'Secret.v1': {},
+    'ConfigMap.v1': {},
+    'Deployment.apps/v1': {},
   },
 }
